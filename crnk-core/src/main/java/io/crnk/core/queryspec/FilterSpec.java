@@ -41,6 +41,16 @@ public class FilterSpec extends AbstractPathSpec implements Comparable<FilterSpe
 		assertNotExpressions();
 	}
 
+	/**
+	 * Constructor when operators shall not be used
+	 * @param attributePath list of path attributes
+	 * @param value that's been passed for this parameter
+	 */
+	public FilterSpec(List<String> attributePath, Object value) {
+		super(attributePath);
+		this.value = value;
+	}
+
 	private FilterSpec(List<String> attributePath, FilterOperator operator, Object value, List<FilterSpec> expressions) {
 		super(attributePath);
 		this.operator = operator;
@@ -187,8 +197,10 @@ public class FilterSpec extends AbstractPathSpec implements Comparable<FilterSpe
 		} else if (attributePath != null) {
 			b.append(StringUtils.join(".", attributePath));
 			b.append(' ');
-			b.append(operator.name());
-			b.append(' ');
+			if (operator != null) {
+				b.append(operator.name());
+				b.append(' ');
+			}
 			b.append(value);
 		}
 		return b.toString();

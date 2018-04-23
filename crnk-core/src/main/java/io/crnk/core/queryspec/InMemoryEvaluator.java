@@ -43,6 +43,9 @@ public class InMemoryEvaluator {
 		}
 		Object value = PropertyUtils.getProperty(object, filterSpec.getAttributePath());
 		FilterOperator operator = filterSpec.getOperator();
+		if (operator == null)
+			return true;
+
 		Object filterValue = filterSpec.getValue();
 		if (value instanceof Collection) {
 			return matchesAny((Collection<?>) value, operator, filterValue);

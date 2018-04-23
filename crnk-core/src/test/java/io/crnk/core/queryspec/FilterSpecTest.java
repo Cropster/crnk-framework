@@ -18,6 +18,17 @@ public class FilterSpecTest {
 		Assert.assertEquals("newValue", spec.getValue());
 	}
 
+	@Test
+	public void testOperatorLessFilterSpec() {
+		FilterSpec spec = new FilterSpec(Arrays.asList("name"), "test");
+		Assert.assertEquals("test", spec.getValue());
+		Assert.assertNull(spec.getOperator());
+		Assert.assertEquals(Arrays.asList("name"), spec.getAttributePath());
+		Assert.assertFalse(spec.hasExpressions());
+		spec.setValue("newValue");
+		Assert.assertEquals("newValue", spec.getValue());
+	}
+
 	@Test(expected = IllegalArgumentException.class)
 	public void testNullOperatorThrowsException() {
 		new FilterSpec(Arrays.asList("name"), null, "test");

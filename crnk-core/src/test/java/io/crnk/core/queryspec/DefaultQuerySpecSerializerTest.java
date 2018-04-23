@@ -80,6 +80,15 @@ public class DefaultQuerySpecSerializerTest {
 		check("http://127.0.0.1/tasks?filter[projects][name][EQ]=test", null, querySpec);
 	}
 
+	@Test
+	public void testOperatorLessFilter() {
+		QuerySpec projectQuerySpec = new QuerySpec(Project.class);
+		projectQuerySpec.addFilter(new FilterSpec(Arrays.asList("name"), "test"));
+		QuerySpec querySpec = new QuerySpec(Task.class);
+		querySpec.putRelatedSpec(Project.class, projectQuerySpec);
+		check("http://127.0.0.1/tasks?filter[projects][name]=test", null, querySpec);
+	}
+
 	@Test(expected = UnsupportedOperationException.class)
 	public void testNestedFilterSpecNotYetSupported() {
 		QuerySpec querySpec = new QuerySpec(Task.class);

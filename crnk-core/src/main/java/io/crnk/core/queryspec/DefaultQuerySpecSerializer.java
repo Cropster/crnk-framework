@@ -74,7 +74,9 @@ public class DefaultQuerySpecSerializer implements QuerySpecSerializer {
 			if (filterSpec.hasExpressions()) {
 				throw new UnsupportedOperationException("filter expressions like and and or not yet supported");
 			}
-			String attrKey = toKey(filterSpec.getAttributePath()) + "[" + filterSpec.getOperator().getName() + "]";
+
+			String opAppendix = filterSpec.getOperator() == null ? "" : "[" + filterSpec.getOperator().getName() + "]";
+			String attrKey = toKey(filterSpec.getAttributePath()) + opAppendix;
 			String key = addResourceType(RestrictedQueryParamsMembers.filter, attrKey, resourceType);
 
 			if (filterSpec.getValue() instanceof Collection) {

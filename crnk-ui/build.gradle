@@ -1,6 +1,6 @@
 import com.moowork.gradle.node.npm.NpmTask
 
-apply plugin: 'com.moowork.node'
+apply plugin: 'com.github.node-gradle.node'
 
 apply plugin:'java'
 

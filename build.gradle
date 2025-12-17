@@ -11,7 +11,6 @@ buildscript {
 		classpath 'com.moowork.gradle:gradle-node-plugin:1.1.1'
 		classpath 'org.ajoberstar:gradle-git-publish:0.4.1'
 		classpath 'org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.5-rc1'
-		classpath "org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.8.1"
 		classpath "net.ltgt.gradle:gradle-apt-plugin:0.10"
 
 		// asciidoc java 9 issues: https://github.com/asciidoctor/asciidoctorj/issues/515
@@ -118,7 +117,6 @@ gradle.beforeProject { Project project ->
 				rootProject.tasks.jacocoRootReport.sourceDirectories = sourceDirs.plus(files(sourceSets.main.allSource.srcDirs))
 				rootProject.tasks.jacocoRootReport.classDirectories = classDirs.plus(mainOutput)
 			}
-			rootProject.coveralls.sourceDirs.addAll(sourceSets.main.allSource.srcDirs.flatten())
 
 
 
@@ -202,9 +200,8 @@ gradle.beforeProject { Project project ->
 	}
 }
 
-// coveralls setup
+// jacoco setup
 apply plugin: "jacoco"
-apply plugin: "com.github.kt3k.coveralls"
 
 def publishedProjects = subprojects.findAll {
 	it.name != 'crnk-documentation' && it.name != 'crnk-ui' && it.name != 'crnk-test' && !it.name.contains('example')
@@ -233,18 +230,6 @@ task jacocoRootReport(type: JacocoReport, group: 'Coverage reports') {
 		xml.enabled = true // required by coveralls
 	}
 
-}
-
-
-coveralls {
-	jacocoReportPath = "${buildDir}/reports/jacoco/jacocoRootReport/jacocoRootReport.xml"
-}
-
-tasks.coveralls {
-	group = 'Coverage reports'
-	description = 'Uploads the aggregated coverage report to Coveralls'
-
-	dependsOn jacocoRootReport
 }
 
 

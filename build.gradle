@@ -6,10 +6,10 @@ buildscript {
 		def depMgmtVersion = versions['dependency.management.plugin.version']
 
 		classpath "io.spring.gradle:dependency-management-plugin:${depMgmtVersion}"
-		classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.7'
+		classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.6.1'
 		classpath 'org.asciidoctor:asciidoctorj-pdf:1.5.0-alpha.16'
+        classpath 'org.ysb33r.gradle:grolifant:0.12.1'
 		classpath 'com.github.node-gradle:gradle-node-plugin:1.4.0'
-		classpath 'org.ajoberstar:gradle-git-publish:0.4.1'
 		classpath 'org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.5-rc1'
 		classpath "net.ltgt.gradle:gradle-apt-plugin:0.10"
 
@@ -20,11 +20,17 @@ buildscript {
 	}
 }
 
+allprojects {
+    configurations.all {
+        resolutionStrategy {
+            force 'org.asciidoctor:asciidoctorj-groovy-dsl:2.0.2'
+        }
+    }
+}
+
 wrapper {
 	gradleVersion = '4.7'
 }
-
-apply plugin: 'org.ajoberstar.grgit'
 
 version = BUILD_VERSION_PREFIX + "-cropster-" + FORK_VERSION
 group = GROUP_ID
@@ -32,6 +38,12 @@ group = GROUP_ID
 // note that a production build creates javadoc, sources jars and signatures undesired during development
 // for performance reasons
 def isProductionBuild = !project.version.endsWith('SNAPSHOT')
+ext {
+    publishingUsername = project.findProperty('io.crnk.repository.username')
+    publishingPassword = project.findProperty('io.crnk.repository.password')
+    publishingRepository = project.findProperty('io.crnk.repository.maven')
+    publishingSnapshotRepository = project.findProperty('io.crnk.repository.maven-snapshots')
+}
 
 if (JavaVersion.current().isJava8Compatible()) {
 	allprojects {
@@ -191,6 +203,15 @@ gradle.beforeProject { Project project ->
 							}
 						}
 					}
+					repositories {
+					    maven {
+					       credentials {
+					           username = publishingUsername
+					           password = publishingPassword
+					       }
+					       url = project.version.endsWith('SNAPSHOT') ? publishingSnapshotRepository : publishingRepository
+					    }
+				    }
 				}
 			}
 

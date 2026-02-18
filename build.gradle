@@ -64,6 +64,7 @@ gradle.beforeProject { Project project ->
 		def testProject = project.name == 'crnk-test'
 		def legacyBraveProject = project.name == 'crnk-brave'
 		def bom = project.name == 'crnk-bom'
+		def typescript = project.name == 'crnk-gen-typescript'
 		def examples = project.name.contains('example')
 
 		if (!docs) {
@@ -176,8 +177,8 @@ gradle.beforeProject { Project project ->
 				}
 			}
 
-			if (!bom) {
-				publishing {
+            publishing {
+			    if (!bom && !typescript) {
 					publications {
 						mavenJava(MavenPublication) {
 							from components.java
@@ -203,18 +204,17 @@ gradle.beforeProject { Project project ->
 							}
 						}
 					}
-					repositories {
-					    maven {
-					       credentials {
-					           username = publishingUsername
-					           password = publishingPassword
-					       }
-					       url = project.version.endsWith('SNAPSHOT') ? publishingSnapshotRepository : publishingRepository
-					    }
-				    }
 				}
-			}
-
+                repositories {
+                    maven {
+                       credentials {
+                           username = publishingUsername
+                           password = publishingPassword
+                       }
+                       url = project.version.endsWith('SNAPSHOT') ? publishingSnapshotRepository : publishingRepository
+                    }
+                }
+            }
 			def releaseBuild =  project.hasProperty('stable')
 		}
 

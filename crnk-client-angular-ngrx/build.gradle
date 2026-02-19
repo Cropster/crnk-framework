@@ -1,4 +1,4 @@
-apply plugin: 'com.moowork.node'
+apply plugin: 'com.github.node-gradle.node'
 
 apply plugin: 'java'
 
@@ -39,7 +39,7 @@ task generateMetaStubs {
 	})
 }
 
-def isProductionBuild = System.env.NEXUS_DEPLOY_USER != null
+def isProductionBuild = !project.version.endsWith('SNAPSHOT')
 if (isProductionBuild) {
 	ext {
 		NG_BUILD_ARGS = ['--environment', 'prod', '--target', 'production']

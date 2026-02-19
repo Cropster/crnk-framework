@@ -48,10 +48,22 @@ You can grab a copy of the license at http://www.apache.org/licenses/LICENSE-2.0
 
 Crnk make use of Gradle for its build. To build the complete project run
 
-    gradlew clean build
+    ./gradlew clean build
     
 Note as part of the build a local Node installation is downloaded to build the frontend parts (crnk-ui) of the project.    
 
+## Publishing
+
+To publish to a Maven repository set the following properties e.g. in `~/.gradle/gradle.properties`:
+
+    io.crnk.repository.maven=https://repo.mydomain.com/maven
+    io.crnk.repository.maven-snapshots=https://repo.mydomain.com/maven-snapshots
+    io.crnk.repository.username=myuser
+    io.crnk.repository.password=XXXXXXXXXXXXXXXXXXXX
+
+Then run (alternatively passing the password):
+
+    ./gradlew -Pio.crnk.repository.password=$AUTH_TOKEN publish
 
 ## Links
 
